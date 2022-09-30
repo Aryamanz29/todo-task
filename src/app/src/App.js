@@ -5,6 +5,7 @@ import axios from "axios";
 export function App() {
   // set component const & vars
   const _TODO_ENDPOINT = "http://localhost:8000/todos/";
+  const todoFormFieldRef = useRef(null);
   const [todo, setTodos] = useState([]);
   const [todoMsg, setTodoMsg] = useState("");
 
@@ -27,7 +28,6 @@ export function App() {
   });
 
   // Handle Todo Formfield
-  const todoFormFieldRef = useRef(null);
   const handleTodoSubmit = (event) => {
     event.preventDefault();
     // Get todo form data
@@ -39,7 +39,6 @@ export function App() {
       .then(function (response) {
         // If successfully created show message and reload page
         if (response.status === 201) {
-          setTodoMsg("Todo has been added successfully!");
           window.location.reload();
         }
       })
@@ -50,6 +49,21 @@ export function App() {
       });
     // After successful submission clear form fields
     event.target.reset();
+  };
+
+  // Handle delete all todos
+  const deleteAllTodos = () => {
+    // Delete todos from the server
+    console.log("delete");
+    axios
+      .delete(_TODO_ENDPOINT)
+      .then(function (response) {
+        window.location.reload();
+      })
+      // Catch errors and display message
+      .catch(function (error) {
+        setTodoMsg(`error : ${error.response.data.error}`);
+      });
   };
 
   return (
@@ -63,14 +77,17 @@ export function App() {
       <div>
         <form onSubmit={handleTodoSubmit} style={{ marginTop: "20px" }}>
           <div style={{ marginTop: "5px" }}>
-            <label for="todoFormField">ToDo:</label>
-            <input type="text" id="todoFormField" ref={todoFormFieldRef} />
+            <label for="todoFormField">Todo:</label>
+            <input type="text" id="todoFormField" ref={todoFormFieldRef} style={{ marginLeft: "10px" }} />
           </div>
           <button type="submit" style={{ marginTop: "20px" }}>
-            Add ToDo!
+            Add Todo!
           </button>
-          <p>{todoMsg}</p>
         </form>
+        <button onClick={deleteAllTodos} style={{ marginTop: "20px" }}>
+          Delete All Todos
+        </button>
+        <p>{todoMsg}</p>
       </div>
     </div>
   );

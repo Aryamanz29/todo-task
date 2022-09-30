@@ -51,6 +51,7 @@ src/app/package-lock.json
 
 src/app/yarn.lock
 src/app/.eslintcache
+src/db/
 
 # dependencies
 src/app/node_modules
